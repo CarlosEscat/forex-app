@@ -6,16 +6,11 @@ import request from "superagent";
 import "./CurrencyCard.css";
 
 class CurrencyCard extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      forex: null,
-      selected_from_currency: "USD",
-      selected_to_currency: "EUR"
-    };
-    this.exchangeResult = this.exchangeResult.bind(this);
-    this.fromCurrency = this.fromCurrency.bind(this);
-  }
+  state = {
+    forex: null,
+    selected_from_currency: "USD",
+    selected_to_currency: "EUR"
+  };
 
   componentDidMount() {
     request
@@ -29,7 +24,7 @@ class CurrencyCard extends Component {
       .catch(console.error);
   }
 
-  exchangeResult() {
+  exchangeResult = () => {
     let value = document.getElementById("amount").value;
     const amount = parseFloat(value);
     let rate = "";
@@ -54,14 +49,14 @@ class CurrencyCard extends Component {
         "3. To_Currency Code"
       ];
     console.log(rate, amount, result);
-  }
+  };
 
-  fromCurrency(e) {
+  fromCurrency = e => {
     this.setState({ selected_from_currency: e.target.value });
 
     const fromCoin = e.target.value;
     console.log(fromCoin);
-  }
+  };
 
   toCurrency = v => {
     this.setState({ selected_to_currency: v.target.value });
