@@ -6,10 +6,15 @@ import request from "superagent";
 import "./CurrencyCard.css";
 
 class CurrencyCard extends Component {
-  state = { forex: null };
   constructor(props) {
     super(props);
+    this.state = {
+      forex: null,
+      selected_from_currency: "USD",
+      selected_to_currency: "EUR"
+    };
     this.exchangeResult = this.exchangeResult.bind(this);
+    this.fromCurrency = this.fromCurrency.bind(this);
   }
 
   componentDidMount() {
@@ -25,8 +30,8 @@ class CurrencyCard extends Component {
   }
 
   exchangeResult() {
-    let x = document.getElementById("amount").value;
-    const amount = parseFloat(x);
+    let value = document.getElementById("amount").value;
+    const amount = parseFloat(value);
     let rate = "";
     if (this.state.forex === undefined) {
       console.log("no rate yet");
@@ -41,32 +46,76 @@ class CurrencyCard extends Component {
     if (isNaN(result) === true) {
       result = 0;
     }
-    document.getElementById("result").textContent = result;
+    result = result.toFixed(2);
+    document.getElementById("result").textContent =
+      result +
+      " " +
+      this.state.forex["Realtime Currency Exchange Rate"][
+        "3. To_Currency Code"
+      ];
     console.log(rate, amount, result);
   }
 
-  // calculateButton() {
-  //   let rate = "";
-  //   if (this.state.forex !== null) {
-  //     rate = this.state.forex["Realtime Currency Exchange Rate"][
-  //       "5. Exchange Rate"
-  //     ];
-  //     rate = parseFloat(rate);
-  //   }
+  fromCurrency(e) {
+    this.setState({ selected_from_currency: e.target.value });
 
-  //   let value = document.getElementById("amount").textContent;
-  //   const result = value * rate;
+    const fromCoin = e.target.value;
+    console.log(fromCoin);
+  }
 
-  //   console.log(result);
-  // }
+  toCurrency = v => {
+    this.setState({ selected_to_currency: v.target.value });
+    const from = this.state.selected_from_currency;
+
+    const toCoin = v.target.value;
+    console.log(toCoin);
+    request
+      .get(
+        `https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${from}&to_currency=${toCoin}&apikey=CJFEKO6QL8QQFZ4C`
+      )
+      .then(response => {
+        this.setState({ forex: response.body });
+        console.log(this.state.forex["Realtime Currency Exchange Rate"]);
+      })
+      .catch(console.error);
+  };
 
   render() {
     return (
-      <div>
+      <div className="card">
+        <br />
+        <label>From: </label>
+        <select
+          className="fromSelect"
+          name="fromlist"
+          defaultValue="USD"
+          onChange={this.fromCurrency}
+        >
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+          <option value="JPY">JPY</option>
+          <option value="PHP">PHP</option>
+        </select>
+        <label>To: </label>
+        <select
+          className="toSelect"
+          name="tolist"
+          defaultValue="EUR"
+          onChange={this.toCurrency}
+        >
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+          <option value="JPY">JPY</option>
+          <option value="PHP">PHP</option>
+        </select>
+        <br />
+        <br />
+        <label className="currpair">Currency pair:{<br />}</label>
         {this.state.forex ? (
           <div>
-            <label>
-              Currency pair:
+            <label className="pair">
               {
                 this.state.forex["Realtime Currency Exchange Rate"][
                   "1. From_Currency Code"
@@ -78,22 +127,31 @@ class CurrencyCard extends Component {
                   "3. To_Currency Code"
                 ]
               }
+              {<br />}
             </label>
-            <p>
-              Exchange Rate:
+            <label className="exchange">
+              {<br />}Exchange Rate:{<br />}
+            </label>
+            <label className="rate">
               {parseFloat(
                 this.state.forex["Realtime Currency Exchange Rate"][
                   "5. Exchange Rate"
                 ]
               )}
-            </p>
+            </label>
           </div>
         ) : (
           <p>No Currency</p>
         )}
-        <input type="text" id="amount" onChange={this.exchangeResult} />
+        <br />
+        <input
+          type="text"
+          id="amount"
+          onChange={this.exchangeResult}
+          autoComplete="off"
+        />
         <br></br>
-        <p id="result"></p>
+        <p className="result" id="result"></p>
       </div>
     );
   }

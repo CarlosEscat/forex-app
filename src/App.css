@@ -9,7 +9,8 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-image: url("https://fxmedia.s3.eu-west-1.amazonaws.com/featured_images/5c2cd5e0d2c521546442208.jpeg");
+  background-color: white;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -17,6 +18,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  font-family: "Arimo", sans-serif;
 }
 
 .App-link {
