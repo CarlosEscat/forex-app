@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-//import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { setCurrenciesState } from "../actions";
 import request from "superagent";
@@ -48,14 +47,14 @@ class CurrencyCard extends Component {
       this.state.forex["Realtime Currency Exchange Rate"][
         "3. To_Currency Code"
       ];
-    console.log(rate, amount, result);
+    //console.log(rate, amount, result);
   };
 
   fromCurrency = e => {
     this.setState({ selected_from_currency: e.target.value });
 
-    const fromCoin = e.target.value;
-    console.log(fromCoin);
+    //const fromCoin = e.target.value;
+    //console.log(fromCoin);
   };
 
   toCurrency = v => {
@@ -63,7 +62,7 @@ class CurrencyCard extends Component {
     const from = this.state.selected_from_currency;
 
     const toCoin = v.target.value;
-    console.log(toCoin);
+    //console.log(toCoin);
     request
       .get(
         `https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${from}&to_currency=${toCoin}&apikey=CJFEKO6QL8QQFZ4C`
@@ -79,7 +78,7 @@ class CurrencyCard extends Component {
     return (
       <div className="card">
         <br />
-        <label>From: </label>
+        {/* <label>From: </label> */}
         <select
           className="fromSelect"
           name="fromlist"
@@ -92,7 +91,7 @@ class CurrencyCard extends Component {
           <option value="JPY">JPY</option>
           <option value="PHP">PHP</option>
         </select>
-        <label>To: </label>
+        <label className="one">/ </label>
         <select
           className="toSelect"
           name="tolist"
